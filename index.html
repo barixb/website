@@ -1,799 +1,935 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riccardo Baratella - Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Riccardo Baratella — Automation & Robotics</title>
+
+    <!-- Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            box-sizing: border-box;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes slideInLeft {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes fadeInUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        @keyframes colorShift {
-            0% { background: linear-gradient(45deg, #667eea, #764ba2); }
-            100% { background: linear-gradient(45deg, #667eea, #764ba2); }
-        }
-        
-        .animate-float { animation: float 3s ease-in-out infinite; }
-        .animate-slide-left { animation: slideInLeft 0.8s ease-out; }
-        .animate-slide-right { animation: slideInRight 0.8s ease-out; }
-        .animate-fade-up { animation: fadeInUp 0.8s ease-out; }
-        .animate-pulse-custom { animation: pulse 2s ease-in-out infinite; }
-        .animate-rotate { animation: rotate 20s linear infinite; }
-        .animate-color-shift { animation: colorShift 8s ease-in-out infinite; }
-        
-        .skill-bar {
-            transition: width 2s ease-in-out;
-        }
-        
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        
-        .gradient-text {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .section-enter {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease-out;
-        }
-        
-        .section-enter.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* ── Design tokens ── */
+    :root, [data-theme="dark"] {
+        --color-bg:              #0f0e0c;
+        --color-surface:         #161512;
+        --color-surface-2:       #1c1a17;
+        --color-surface-offset:  #232119;
+        --color-surface-dynamic: #2a281f;
+        --color-divider:         #2e2c24;
+        --color-border:          #3a3830;
+
+        --color-text:            #e8e4dc;
+        --color-text-muted:      #8a8880;
+        --color-text-faint:      #555350;
+        --color-text-inverse:    #0f0e0c;
+
+        --color-primary:         #2fb5a0;
+        --color-primary-hover:   #1d9988;
+        --color-primary-active:  #147a6e;
+        --color-primary-highlight: #1a2e2c;
+
+        --color-accent:          #e8a84c;
+        --color-accent-hover:    #d4923a;
+
+        --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.3);
+        --shadow-md: 0 4px 16px oklch(0 0 0 / 0.4);
+        --shadow-lg: 0 12px 40px oklch(0 0 0 / 0.5);
+
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+        --radius-2xl: 1.5rem;
+        --radius-full: 9999px;
+
+        --font-display: 'Cabinet Grotesk', 'Helvetica Neue', sans-serif;
+        --font-body:    'Satoshi', 'Inter', sans-serif;
+
+        --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+        --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+        --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+        --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+        --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+        --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+        --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+        --text-hero: clamp(3rem,     0.5rem  + 7vw,    8rem);
+
+        --space-1: 0.25rem; --space-2: 0.5rem;  --space-3: 0.75rem;
+        --space-4: 1rem;    --space-5: 1.25rem; --space-6: 1.5rem;
+        --space-8: 2rem;    --space-10: 2.5rem; --space-12: 3rem;
+        --space-16: 4rem;   --space-20: 5rem;   --space-24: 6rem;
+
+        --content-narrow:  640px;
+        --content-default: 960px;
+        --content-wide:    1200px;
+        --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="light"] {
+        --color-bg:              #f5f3ee;
+        --color-surface:         #f9f8f4;
+        --color-surface-2:       #ffffff;
+        --color-surface-offset:  #eeece6;
+        --color-surface-dynamic: #e6e4de;
+        --color-divider:         #dedad2;
+        --color-border:          #d4d0c8;
+        --color-text:            #1a1916;
+        --color-text-muted:      #6b6960;
+        --color-text-faint:      #aba9a0;
+        --color-text-inverse:    #f5f3ee;
+        --color-primary:         #0d8a78;
+        --color-primary-hover:   #0a7063;
+        --color-primary-active:  #075a50;
+        --color-primary-highlight: #d4efeb;
+        --color-accent:          #b87420;
+        --color-accent-hover:    #9e6218;
+        --shadow-sm: 0 1px 3px oklch(0.2 0.01 80 / 0.08);
+        --shadow-md: 0 4px 16px oklch(0.2 0.01 80 / 0.1);
+        --shadow-lg: 0 12px 40px oklch(0.2 0.01 80 / 0.14);
+    }
+
+    /* ── Reset / base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 5rem;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        hanging-punctuation: first last;
+    }
+    body {
+        font-family: var(--font-body);
+        font-size: var(--text-base);
+        color: var(--color-text);
+        background: var(--color-bg);
+        min-height: 100dvh;
+        overflow-x: hidden;
+        line-height: 1.65;
+    }
+    img, svg { display: block; max-width: 100%; }
+    h1,h2,h3,h4 { font-family: var(--font-display); text-wrap: balance; line-height: 1.1; }
+    p, li { text-wrap: pretty; }
+    a, button, [role="button"] {
+        transition: color var(--transition), background var(--transition),
+                    border-color var(--transition), box-shadow var(--transition),
+                    opacity var(--transition);
+    }
+    button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border-width:0; }
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+    }
+
+    /* ── Layout helpers ── */
+    .container { max-width: var(--content-default); margin-inline: auto; padding-inline: clamp(var(--space-4), 4vw, var(--space-12)); }
+    .container--wide { max-width: var(--content-wide); margin-inline: auto; padding-inline: clamp(var(--space-4), 4vw, var(--space-12)); }
+
+    /* ── Navigation ── */
+    .nav {
+        position: fixed; top: 0; width: 100%; z-index: 100;
+        background: color-mix(in oklch, var(--color-bg) 85%, transparent);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--color-divider);
+    }
+    .nav__inner {
+        display: flex; align-items: center; justify-content: space-between;
+        padding-block: var(--space-4);
+    }
+    .nav__logo {
+        font-family: var(--font-display); font-weight: 800;
+        font-size: var(--text-base); color: var(--color-text);
+        text-decoration: none; letter-spacing: -0.02em;
+        display: flex; align-items: center; gap: var(--space-2);
+    }
+    .nav__logo svg { color: var(--color-primary); flex-shrink: 0; }
+    .nav__links { display: flex; gap: var(--space-6); list-style: none; }
+    .nav__links a {
+        font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none;
+        font-weight: 500; letter-spacing: 0.01em;
+    }
+    .nav__links a:hover { color: var(--color-text); }
+    .nav__right { display: flex; align-items: center; gap: var(--space-3); }
+    .theme-toggle {
+        width: 36px; height: 36px; border-radius: var(--radius-full);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--color-text-muted); border: 1px solid var(--color-border);
+    }
+    .theme-toggle:hover { color: var(--color-text); background: var(--color-surface-offset); }
+    .hamburger { display: none; width: 36px; height: 36px; align-items: center; justify-content: center; color: var(--color-text-muted); }
+
+    /* Mobile nav */
+    .mobile-nav {
+        display: none; position: fixed; inset: 0; z-index: 99;
+        background: var(--color-bg); padding-top: 5rem;
+        flex-direction: column; align-items: center; justify-content: center; gap: var(--space-8);
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--color-text); text-decoration: none; }
+    .mobile-nav a:hover { color: var(--color-primary); }
+
+    @media (max-width: 768px) {
+        .nav__links { display: none; }
+        .hamburger { display: flex; }
+    }
+
+    /* ── Hero ── */
+    .hero {
+        min-height: 100dvh;
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: center;
+        padding-top: 5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero::before {
+        content: '';
+        position: absolute; inset: 0;
+        background:
+            radial-gradient(ellipse 60% 50% at 80% 20%, color-mix(in oklch, var(--color-primary) 8%, transparent) 0%, transparent 70%),
+            radial-gradient(ellipse 40% 40% at 20% 80%, color-mix(in oklch, var(--color-accent) 5%, transparent) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .hero__inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-16);
+        align-items: center;
+    }
+    .hero__label {
+        font-size: var(--text-xs); font-weight: 500; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--color-primary);
+        display: flex; align-items: center; gap: var(--space-2);
+        margin-bottom: var(--space-4);
+    }
+    .hero__label::before { content: ''; display: block; width: 20px; height: 1px; background: var(--color-primary); }
+    .hero__name {
+        font-family: var(--font-display); font-weight: 800;
+        font-size: var(--text-3xl); letter-spacing: -0.03em;
+        color: var(--color-text); line-height: 1.0;
+        margin-bottom: var(--space-4);
+    }
+    .hero__name span { color: var(--color-primary); }
+    .hero__tagline {
+        font-size: var(--text-lg); color: var(--color-text-muted);
+        font-weight: 400; margin-bottom: var(--space-8);
+        max-width: 44ch;
+    }
+    .hero__cta { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+    .btn {
+        display: inline-flex; align-items: center; gap: var(--space-2);
+        padding: var(--space-3) var(--space-6); border-radius: var(--radius-full);
+        font-size: var(--text-sm); font-weight: 600; text-decoration: none;
+        white-space: nowrap;
+    }
+    .btn--primary { background: var(--color-primary); color: #fff; }
+    .btn--primary:hover { background: var(--color-primary-hover); }
+    .btn--ghost {
+        background: transparent; color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+    }
+    .btn--ghost:hover { color: var(--color-text); border-color: var(--color-text-muted); background: var(--color-surface-offset); }
+
+    .hero__tech-stack {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-2xl);
+        padding: var(--space-6);
+        box-shadow: var(--shadow-lg);
+    }
+    .hero__tech-title {
+        font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.1em;
+        text-transform: uppercase; color: var(--color-text-faint);
+        margin-bottom: var(--space-5);
+    }
+    .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+    .tech-item {
+        display: flex; align-items: center; gap: var(--space-3);
+        background: var(--color-surface-offset);
+        border: 1px solid var(--color-divider);
+        border-radius: var(--radius-lg); padding: var(--space-3) var(--space-4);
+        font-size: var(--text-xs); font-weight: 500; color: var(--color-text-muted);
+    }
+    .tech-item__dot {
+        width: 7px; height: 7px; border-radius: var(--radius-full);
+        flex-shrink: 0; background: var(--color-primary);
+    }
+    .tech-item__dot--amber { background: var(--color-accent); }
+    .tech-item__dot--blue { background: #5591c7; }
+    .tech-item__dot--purple { background: #a86fdf; }
+    .hero__status {
+        margin-top: var(--space-5);
+        display: flex; align-items: center; gap: var(--space-3);
+        font-size: var(--text-xs); color: var(--color-text-muted);
+        padding-top: var(--space-5);
+        border-top: 1px solid var(--color-divider);
+    }
+    .status-dot {
+        width: 8px; height: 8px; border-radius: var(--radius-full);
+        background: #6daa45; flex-shrink: 0;
+        box-shadow: 0 0 6px #6daa4580;
+        animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+    @media (max-width: 900px) {
+        .hero__inner { grid-template-columns: 1fr; gap: var(--space-10); }
+        .hero__tech-stack { max-width: 480px; }
+    }
+    @media (max-width: 480px) {
+        .tech-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Section base ── */
+    section { padding-block: clamp(var(--space-12), 8vw, var(--space-24)); }
+    .section-label {
+        font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.12em;
+        text-transform: uppercase; color: var(--color-primary);
+        display: flex; align-items: center; gap: var(--space-2);
+        margin-bottom: var(--space-4);
+    }
+    .section-label::before { content:''; display:block; width:20px; height:1px; background:var(--color-primary); }
+    .section-title {
+        font-family: var(--font-display); font-weight: 800;
+        font-size: var(--text-2xl); letter-spacing: -0.03em;
+        color: var(--color-text); margin-bottom: var(--space-4);
+    }
+    .section-lead { font-size: var(--text-base); color: var(--color-text-muted); max-width: 58ch; margin-bottom: var(--space-10); }
+
+    /* ── About ── */
+    .about__grid { display: grid; grid-template-columns: 3fr 2fr; gap: var(--space-12); align-items: start; }
+    .about__text p { color: var(--color-text-muted); margin-bottom: var(--space-5); max-width: 65ch; }
+    .about__text p strong { color: var(--color-text); }
+    .about__meta { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-8); }
+    .meta-row {
+        display: flex; gap: var(--space-3); align-items: baseline;
+        font-size: var(--text-sm);
+    }
+    .meta-row__key { color: var(--color-text-faint); font-weight: 500; width: 90px; flex-shrink: 0; }
+    .meta-row__val { color: var(--color-text-muted); }
+
+    .about__card {
+        background: var(--color-surface); border: 1px solid var(--color-border);
+        border-radius: var(--radius-2xl); padding: var(--space-6);
+        box-shadow: var(--shadow-md);
+    }
+    .about__card-title {
+        font-family: var(--font-display); font-weight: 700;
+        font-size: var(--text-base); color: var(--color-text);
+        margin-bottom: var(--space-5);
+        padding-bottom: var(--space-3);
+        border-bottom: 1px solid var(--color-divider);
+    }
+    .edu-item { margin-bottom: var(--space-5); }
+    .edu-item__school { font-weight: 700; font-size: var(--text-sm); color: var(--color-text); }
+    .edu-item__period { font-size: var(--text-xs); color: var(--color-primary); margin-bottom: var(--space-2); }
+    .edu-item__desc { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.6; }
+    .lang-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); font-size: var(--text-sm); }
+    .lang-item__name { color: var(--color-text-muted); }
+    .lang-item__level {
+        font-size: var(--text-xs); font-weight: 600;
+        background: var(--color-primary-highlight);
+        color: var(--color-primary); padding: 2px 8px;
+        border-radius: var(--radius-full);
+    }
+
+    @media (max-width: 768px) {
+        .about__grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Skills ── */
+    .skills__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: var(--space-4); }
+    .skill-card {
+        background: var(--color-surface); border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl); padding: var(--space-6);
+        box-shadow: var(--shadow-sm);
+        transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .skill-card:hover { box-shadow: var(--shadow-md); border-color: color-mix(in oklch, var(--color-primary) 40%, var(--color-border)); }
+    .skill-card__icon {
+        width: 40px; height: 40px; border-radius: var(--radius-md);
+        background: var(--color-primary-highlight);
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: var(--space-4); color: var(--color-primary);
+    }
+    .skill-card__title { font-family: var(--font-display); font-weight: 700; font-size: var(--text-base); color: var(--color-text); margin-bottom: var(--space-3); }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .tag {
+        font-size: var(--text-xs); font-weight: 500;
+        background: var(--color-surface-offset);
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-divider);
+        padding: 3px 10px; border-radius: var(--radius-full);
+    }
+
+    /* ── Projects ── */
+    .projects__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px,100%), 1fr)); gap: var(--space-5); }
+    .project-card {
+        background: var(--color-surface); border: 1px solid var(--color-border);
+        border-radius: var(--radius-2xl); padding: var(--space-6);
+        box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
+        transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+    }
+    .project-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: color-mix(in oklch, var(--color-primary) 35%, var(--color-border)); }
+    .project-card__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4); }
+    .project-card__icon { font-size: 1.5rem; }
+    .project-card__badge {
+        font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.05em;
+        padding: 3px 10px; border-radius: var(--radius-full);
+        background: var(--color-primary-highlight); color: var(--color-primary);
+    }
+    .project-card__badge--ongoing { background: color-mix(in oklch, #6daa45 15%, var(--color-bg)); color: #6daa45; }
+    .project-card__title { font-family: var(--font-display); font-weight: 700; font-size: var(--text-base); color: var(--color-text); margin-bottom: var(--space-2); }
+    .project-card__desc { font-size: var(--text-sm); color: var(--color-text-muted); flex: 1; margin-bottom: var(--space-5); line-height: 1.7; max-width: 100%; }
+    .project-card__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+    /* ── Experience timeline ── */
+    .timeline { display: flex; flex-direction: column; gap: 0; position: relative; }
+    .timeline::before {
+        content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px;
+        width: 1px; background: var(--color-divider);
+    }
+    .timeline-item { display: flex; gap: var(--space-6); padding-bottom: var(--space-8); position: relative; }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-item__dot {
+        width: 24px; height: 24px; border-radius: var(--radius-full);
+        background: var(--color-surface); border: 2px solid var(--color-primary);
+        flex-shrink: 0; margin-top: 2px; position: relative; z-index: 1;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .timeline-item__dot::after { content: ''; width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--color-primary); }
+    .timeline-item__content { flex: 1; }
+    .timeline-item__period { font-size: var(--text-xs); color: var(--color-primary); font-weight: 500; margin-bottom: var(--space-1); letter-spacing: 0.05em; }
+    .timeline-item__title { font-family: var(--font-display); font-weight: 700; font-size: var(--text-base); color: var(--color-text); margin-bottom: var(--space-1); }
+    .timeline-item__org { font-size: var(--text-sm); color: var(--color-text-faint); margin-bottom: var(--space-3); }
+    .timeline-item__desc { font-size: var(--text-sm); color: var(--color-text-muted); max-width: 58ch; line-height: 1.7; }
+
+    /* ── Contact ── */
+    .contact__grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); max-width: 640px; }
+    .contact-card {
+        background: var(--color-surface); border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl); padding: var(--space-5);
+        display: flex; align-items: center; gap: var(--space-4);
+        text-decoration: none;
+        box-shadow: var(--shadow-sm);
+        transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .contact-card:hover { box-shadow: var(--shadow-md); border-color: color-mix(in oklch, var(--color-primary) 40%, var(--color-border)); }
+    .contact-card__icon {
+        width: 42px; height: 42px; border-radius: var(--radius-md);
+        background: var(--color-primary-highlight);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--color-primary); flex-shrink: 0;
+    }
+    .contact-card__label { font-size: var(--text-xs); color: var(--color-text-faint); font-weight: 500; margin-bottom: 2px; }
+    .contact-card__value { font-size: var(--text-sm); color: var(--color-text-muted); word-break: break-all; }
+    @media (max-width: 600px) { .contact__grid { grid-template-columns: 1fr; } }
+
+    /* ── Footer ── */
+    .footer {
+        border-top: 1px solid var(--color-divider);
+        padding-block: var(--space-8);
+    }
+    .footer__inner { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+    .footer__copy { font-size: var(--text-xs); color: var(--color-text-faint); }
+    .footer__links { display: flex; gap: var(--space-5); }
+    .footer__links a { font-size: var(--text-xs); color: var(--color-text-faint); text-decoration: none; }
+    .footer__links a:hover { color: var(--color-text-muted); }
+
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Divider ── */
+    hr.section-divider { border: none; border-top: 1px solid var(--color-divider); margin-block: 0; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-100 to-blue-50 text-gray-800 overflow-x-hidden">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full bg-gradient-to-r from-white to-blue-50 bg-opacity-90 backdrop-blur-md z-50 animate-slide-left shadow-lg">
-        <div class="container mx-auto px-4 sm:px-6 py-4">
-            <div class="flex justify-between items-center">
-                <h1 class="text-xl sm:text-2xl font-bold gradient-text">Riccardo Baratella</h1>
-                
-                <!-- Mobile menu button -->
-                <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-purple-600 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
+<body>
+
+<!-- Skip link -->
+<a class="sr-only" href="#main">Skip to content</a>
+
+<!-- Navigation -->
+<header>
+    <nav class="nav" aria-label="Main navigation">
+        <div class="container nav__inner">
+            <a href="#home" class="nav__logo" aria-label="Riccardo Baratella — home">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                    <rect x="1" y="1" width="9" height="9" rx="2" fill="currentColor" opacity="0.9"/>
+                    <rect x="12" y="1" width="9" height="9" rx="2" fill="currentColor" opacity="0.4"/>
+                    <rect x="1" y="12" width="9" height="9" rx="2" fill="currentColor" opacity="0.4"/>
+                    <rect x="12" y="12" width="9" height="9" rx="2" fill="currentColor" opacity="0.7"/>
+                </svg>
+                Riccardo Baratella
+            </a>
+            <ul class="nav__links" role="list">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav__right">
+                <button class="theme-toggle" data-theme-toggle aria-label="Switch to light mode">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 </button>
-                
-                <!-- Desktop menu -->
-                <div class="hidden md:flex space-x-6">
-                    <a href="#home" class="text-gray-700 hover:text-purple-600 transition-colors">Home</a>
-                    <a href="#about" class="text-gray-700 hover:text-purple-600 transition-colors">About</a>
-                    <a href="#skills" class="text-gray-700 hover:text-purple-600 transition-colors">Skills</a>
-                    <a href="#projects" class="text-gray-700 hover:text-purple-600 transition-colors">Projects</a>
-                    <a href="#contact" class="text-gray-700 hover:text-purple-600 transition-colors">Contact</a>
-                </div>
-            </div>
-            
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
-                <div class="flex flex-col space-y-3">
-                    <a href="#home" class="text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-lg hover:bg-purple-50">Home</a>
-                    <a href="#about" class="text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-lg hover:bg-purple-50">About</a>
-                    <a href="#skills" class="text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-lg hover:bg-purple-50">Skills</a>
-                    <a href="#projects" class="text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-lg hover:bg-purple-50">Projects</a>
-                    <a href="#contact" class="text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-lg hover:bg-purple-50">Contact</a>
-                </div>
+                <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h16"/></svg>
+                </button>
             </div>
         </div>
     </nav>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+        <a href="#about" class="mobile-link">About</a>
+        <a href="#skills" class="mobile-link">Skills</a>
+        <a href="#projects" class="mobile-link">Projects</a>
+        <a href="#experience" class="mobile-link">Experience</a>
+        <a href="#contact" class="mobile-link">Contact</a>
+    </nav>
+</header>
 
-    <!-- Hero Section -->
-    <section id="home" class="min-h-full flex items-center justify-center relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-200 to-blue-200 opacity-60"></div>
-        <div class="absolute inset-0">
-            <div class="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-purple-300 to-purple-500 rounded-full opacity-40 animate-float"></div>
-            <div class="absolute top-40 right-32 w-24 h-24 bg-gradient-to-br from-blue-300 to-blue-500 rounded-full opacity-40 animate-float" style="animation-delay: 1s;"></div>
-            <div class="absolute bottom-32 left-1/3 w-40 h-40 bg-gradient-to-br from-pink-300 to-pink-500 rounded-full opacity-40 animate-float" style="animation-delay: 2s;"></div>
-        </div>
-        
-        <div class="relative z-10 text-center px-4 sm:px-6">
-            <div class="animate-fade-up">
-                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold mb-4 sm:mb-6 gradient-text leading-tight">
-                    Riccardo Baratella
-                </h1>
-                <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl mb-6 sm:mb-8 text-gray-700">
-                    ICT Student & Future Developer
+<main id="main">
+
+<!-- ── HERO ── -->
+<section id="home" class="hero">
+    <div class="container">
+        <div class="hero__inner">
+            <div>
+                <p class="hero__label">Based in Pianiga, Veneto — Italy</p>
+                <h1 class="hero__name">Riccardo<br><span>Baratella</span></h1>
+                <p class="hero__tagline">
+                    ICT student &amp; automation technician. I build robotic systems,
+                    program PLCs, and connect industrial hardware with software —
+                    from Teensy microcontrollers to ROS&nbsp;2.
                 </p>
-                <div class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-12 italic text-purple-600 animate-pulse-custom px-4">
-                    "Innovation starts with curiosity"
-                </div>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md sm:max-w-none mx-auto">
-                    <button onclick="downloadCV()" class="bg-purple-600 hover:bg-purple-700 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition-all transform hover:scale-105 text-white">
-                        Download CV
-                    </button>
-                    <a href="#contact" class="border-2 border-purple-400 hover:bg-purple-400 hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition-all transform hover:scale-105">
-                        Contact
+                <div class="hero__cta">
+                    <a href="#contact" class="btn btn--primary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.08-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+                        Get in touch
                     </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-blue-50 to-purple-50 section-enter">
-        <div class="container mx-auto px-4 sm:px-6">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 gradient-text">About Me</h2>
-            
-            <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                <div class="space-y-4 sm:space-y-6">
-                    <div class="bg-gradient-to-br from-white to-purple-50 p-4 sm:p-6 lg:p-8 rounded-2xl card-hover shadow-lg">
-                        <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-purple-600">Personal Info</h3>
-                        <div class="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-700">
-                            <p><span class="text-purple-600 font-semibold">Born:</span> December 24, 2008 in Padova, Italy</p>
-                            <p><span class="text-purple-600 font-semibold">Nationality:</span> Italian</p>
-                            <p><span class="text-purple-600 font-semibold">Location:</span> Mellaredo, Italy</p>
-                            <p><span class="text-purple-600 font-semibold">Languages:</span> Italian (Native), English (B2)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gradient-to-br from-white to-blue-50 p-4 sm:p-6 lg:p-8 rounded-2xl card-hover shadow-lg">
-                        <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-blue-600">Current Focus</h3>
-                        <p class="text-sm sm:text-base text-gray-700 leading-relaxed">
-                            I am a passionate ICT student at ITI Francesco Severi, seeking opportunities in the technology field. 
-                            I excel at problem-solving, programming, and thrive both in independent work and team collaboration.
-                        </p>
-                    </div>
-                </div>
-                
-                <div class="bg-gradient-to-br from-purple-600 to-blue-600 p-4 sm:p-6 lg:p-8 rounded-2xl card-hover mt-6 lg:mt-0">
-                    <h3 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-white">Education</h3>
-                    <div class="bg-white bg-opacity-20 p-4 sm:p-6 rounded-xl">
-                        <h4 class="text-lg sm:text-xl font-bold mb-2 text-white">ITI Francesco Severi</h4>
-                        <p class="text-purple-100 mb-3 sm:mb-4 text-sm sm:text-base">High School Diploma • Sep 2022 - Current</p>
-                        <p class="text-white mb-3 sm:mb-4 text-sm sm:text-base">Information and Communication Technologies</p>
-                        <div class="space-y-2">
-                            <div class="flex items-center">
-                                <div class="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mr-3 flex-shrink-0"></div>
-                                <span class="text-xs sm:text-sm text-white">Object-Oriented Programming (Java)</span>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mr-3 flex-shrink-0"></div>
-                                <span class="text-xs sm:text-sm text-white">Web Development (HTML, CSS, JS)</span>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mr-3 flex-shrink-0"></div>
-                                <span class="text-xs sm:text-sm text-white">Network Data Processing</span>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mr-3 flex-shrink-0"></div>
-                                <span class="text-xs sm:text-sm text-white">Circuit Design (NI Multisim)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-purple-50 to-blue-100 section-enter">
-        <div class="container mx-auto px-4 sm:px-6">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 gradient-text">Technical Skills</h2>
-            
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                <!-- Programming Languages -->
-                <div class="bg-gradient-to-br from-purple-300 to-purple-400 p-4 sm:p-6 lg:p-8 rounded-2xl card-hover sm:col-span-2 lg:col-span-1">
-                    <div class="text-center mb-4 sm:mb-6">
-                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-60 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 animate-pulse-custom">
-                            <span class="text-xl sm:text-2xl">💻</span>
-                        </div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-purple-800">Programming</h3>
-                    </div>
-                    <div class="space-y-3 sm:space-y-4">
-                        <div>
-                            <div class="flex justify-between mb-2 text-sm sm:text-base">
-                                <span>Java</span>
-                                <span>85%</span>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-full h-2 sm:h-3">
-                                <div class="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 sm:h-3 rounded-full skill-bar" style="width: 85%;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2 text-sm sm:text-base">
-                                <span>Python</span>
-                                <span>75%</span>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-full h-2 sm:h-3">
-                                <div class="bg-gradient-to-r from-green-400 to-emerald-500 h-2 sm:h-3 rounded-full skill-bar" style="width: 75%;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2 text-sm sm:text-base">
-                                <span>C#</span>
-                                <span>65%</span>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-full h-2 sm:h-3">
-                                <div class="bg-gradient-to-r from-blue-400 to-indigo-500 h-2 sm:h-3 rounded-full skill-bar" style="width: 65%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Web Development -->
-                <div class="bg-gradient-to-br from-blue-300 to-blue-400 p-4 sm:p-6 lg:p-8 rounded-2xl card-hover">
-                    <div class="text-center mb-4 sm:mb-6">
-                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-60 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 animate-pulse-custom">
-                            <span class="text-xl sm:text-2xl">🌐</span>
-                        </div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-blue-800">Web Development</h3>
-                    </div>
-                    <div class="space-y-3 sm:space-y-4">
-                        <div>
-                            <div class="flex justify-between mb-2 text-sm sm:text-base">
-                                <span>HTML</span>
-                                <span>90%</span>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-full h-2 sm:h-3">
-                                <div class="bg-gradient-to-r from-orange-400 to-red-500 h-2 sm:h-3 rounded-full skill-bar" style="width: 90%;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2 text-sm sm:text-base">
-                                <span>CSS</span>
-                                <span>85%</span>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-full h-2 sm:h-3">
-                                <div class="bg-gradient-to-r from-blue-400 to-cyan-500 h-2 sm:h-3 rounded-full skill-bar" style="width: 85%;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2 text-sm sm:text-base">
-                                <span>JavaScript</span>
-                                <span>80%</span>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-full h-2 sm:h-3">
-                                <div class="bg-gradient-to-r from-yellow-400 to-amber-500 h-2 sm:h-3 rounded-full skill-bar" style="width: 80%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Electronics & Hardware -->
-                <div class="bg-gradient-to-br from-green-300 to-green-400 p-4 sm:p-6 lg:p-8 rounded-2xl card-hover sm:col-span-2 lg:col-span-1">
-                    <div class="text-center mb-4 sm:mb-6">
-                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-60 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 animate-pulse-custom">
-                            <span class="text-xl sm:text-2xl">⚡</span>
-                        </div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-green-800">Electronics</h3>
-                    </div>
-                    <div class="space-y-3 sm:space-y-4">
-                        <div>
-                            <div class="flex justify-between mb-2 text-sm sm:text-base">
-                                <span>Arduino</span>
-                                <span>90%</span>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-full h-2 sm:h-3">
-                                <div class="bg-gradient-to-r from-teal-400 to-cyan-500 h-2 sm:h-3 rounded-full skill-bar" style="width: 90%;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2 text-sm sm:text-base">
-                                <span>ESP32</span>
-                                <span>75%</span>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-full h-2 sm:h-3">
-                                <div class="bg-gradient-to-r from-purple-400 to-violet-500 h-2 sm:h-3 rounded-full skill-bar" style="width: 75%;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2 text-sm sm:text-base">
-                                <span>Circuit Design</span>
-                                <span>80%</span>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-full h-2 sm:h-3">
-                                <div class="bg-gradient-to-r from-red-400 to-pink-500 h-2 sm:h-3 rounded-full skill-bar" style="width: 80%;"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="#projects" class="btn btn--ghost">View projects</a>
                 </div>
             </div>
 
-
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-blue-50 to-indigo-100 section-enter">
-        <div class="container mx-auto px-4 sm:px-6">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 gradient-text">Featured Projects</h2>
-            
-            <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
-                <!-- Game Development Project -->
-                <div class="bg-gradient-to-br from-purple-300 to-pink-300 p-4 sm:p-6 lg:p-8 rounded-2xl card-hover">
-                    <div class="text-center mb-4 sm:mb-6">
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-60 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 animate-rotate">
-                            <span class="text-2xl sm:text-3xl">🎮</span>
-                        </div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-purple-800">Ocean Cleanup Game</h3>
-                        <p class="text-sm sm:text-base text-purple-700">Dec 2024 - Mar 2025</p>
-                    </div>
-                    <div class="bg-white bg-opacity-60 p-4 sm:p-6 rounded-xl">
-                        <p class="text-sm sm:text-base text-gray-800 mb-3 sm:mb-4">
-                            Developed an environmental awareness game where players pilot a spaceship to destroy ocean trash using laser weapons. 
-                            Players earn points for each piece of debris eliminated.
-                        </p>
-                        <div class="flex flex-wrap gap-2 mb-3 sm:mb-4">
-                            <span class="bg-gradient-to-r from-purple-400 to-purple-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">Unity</span>
-                            <span class="bg-gradient-to-r from-purple-400 to-purple-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">C#</span>
-                            <span class="bg-gradient-to-r from-purple-400 to-purple-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">Game Design</span>
-                        </div>
-                        <p class="text-xs sm:text-sm text-purple-700">
-                            <strong>Team Project:</strong> Collaborated with classmates to create an engaging environmental game
-                        </p>
-                    </div>
+            <div class="hero__tech-stack">
+                <p class="hero__tech-title">Current stack &amp; tools</p>
+                <div class="tech-grid">
+                    <div class="tech-item"><span class="tech-item__dot"></span>ROS 2 / micro-ROS</div>
+                    <div class="tech-item"><span class="tech-item__dot"></span>Teensy 4.1</div>
+                    <div class="tech-item"><span class="tech-item__dot tech-item__dot--amber"></span>TIA Portal (PLC)</div>
+                    <div class="tech-item"><span class="tech-item__dot tech-item__dot--amber"></span>ModBus RTU</div>
+                    <div class="tech-item"><span class="tech-item__dot tech-item__dot--blue"></span>Arduino / ESP32</div>
+                    <div class="tech-item"><span class="tech-item__dot tech-item__dot--blue"></span>Python / C++</div>
+                    <div class="tech-item"><span class="tech-item__dot tech-item__dot--purple"></span>Docker / TrueNAS</div>
+                    <div class="tech-item"><span class="tech-item__dot tech-item__dot--purple"></span>Nginx / Pi-hole</div>
                 </div>
-
-                <!-- Electronics Projects -->
-                <div class="bg-gradient-to-br from-green-300 to-teal-300 p-4 sm:p-6 lg:p-8 rounded-2xl card-hover">
-                    <div class="text-center mb-4 sm:mb-6">
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-60 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 animate-float">
-                            <span class="text-2xl sm:text-3xl">🔧</span>
-                        </div>
-                        <h3 class="text-xl sm:text-2xl font-bold text-green-800">Electronics Hobby Projects</h3>
-                        <p class="text-sm sm:text-base text-green-700">Ongoing</p>
-                    </div>
-                    <div class="bg-white bg-opacity-60 p-4 sm:p-6 rounded-xl">
-                        <p class="text-sm sm:text-base text-gray-800 mb-3 sm:mb-4">
-                            Continuously exploring electronics through personal projects that help me understand component integration 
-                            and prepare for future applications.
-                        </p>
-                        <div class="flex flex-wrap gap-2 mb-3 sm:mb-4">
-                            <span class="bg-gradient-to-r from-green-400 to-green-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">Arduino</span>
-                            <span class="bg-gradient-to-r from-green-400 to-green-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">ESP32</span>
-                            <span class="bg-gradient-to-r from-green-400 to-green-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">Circuit Design</span>
-                        </div>
-                        <p class="text-xs sm:text-sm text-green-700">
-                            <strong>Self-Directed Learning:</strong> Building practical understanding through hands-on experimentation
-                        </p>
-                    </div>
+                <div class="hero__status">
+                    <span class="status-dot"></span>
+                    Currently in alternanza scuola-lavoro — industrial automation
                 </div>
             </div>
-
-            <!-- Volunteer Experience -->
-            <div class="mt-8 sm:mt-10 lg:mt-12">
-                <h3 class="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-blue-600">Volunteer Experience</h3>
-                <div class="bg-gradient-to-br from-blue-300 to-indigo-300 p-4 sm:p-6 lg:p-8 rounded-2xl card-hover max-w-4xl mx-auto">
-                    <div class="text-center mb-4 sm:mb-6">
-                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-60 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 animate-pulse-custom">
-                            <span class="text-xl sm:text-2xl">🎪</span>
-                        </div>
-                        <h4 class="text-xl sm:text-2xl font-bold text-blue-800">FestOn Festival Volunteer</h4>
-                        <p class="text-sm sm:text-base text-blue-700">Summer 2023, 2024, 2025</p>
-                    </div>
-                    <div class="bg-white bg-opacity-60 p-4 sm:p-6 rounded-xl">
-                        <p class="text-sm sm:text-base text-gray-800 mb-3 sm:mb-4">
-                            Worked as a waiter at the local FestOn festival for three consecutive summers, collaborating with 
-                            team members of various ages and backgrounds.
-                        </p>
-                        <div class="grid sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
-                            <div>
-                                <strong class="text-blue-700">Skills Developed:</strong>
-                                <ul class="list-disc list-inside text-gray-700 mt-1 sm:mt-2">
-                                    <li>Teamwork and collaboration</li>
-                                    <li>Time management</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <strong class="text-blue-700">Key Learnings:</strong>
-                                <ul class="list-disc list-inside text-gray-700 mt-1 sm:mt-2">
-                                    <li>Respect for diverse age groups</li>
-                                    <li>Importance of punctuality</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-purple-50 to-pink-50 section-enter">
-        <div class="container mx-auto px-4 sm:px-6">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 gradient-text">Contact</h2>
-            
-            <div class="max-w-4xl mx-auto">
-                <div class="grid sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-2xl mx-auto">
-                    <div class="bg-gradient-to-br from-purple-200 to-purple-300 p-4 sm:p-6 rounded-2xl card-hover">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-60 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                                <span class="text-lg sm:text-xl">📧</span>
-                            </div>
-                            <div class="min-w-0">
-                                <h3 class="text-base sm:text-lg font-bold text-purple-800">Email</h3>
-                                <a href="mailto:riccardoo.baratella@gmail.com" class="text-sm sm:text-base text-purple-700 hover:text-purple-900 transition-colors break-all">
-                                    riccardoo.baratella@gmail.com
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gradient-to-br from-blue-200 to-blue-300 p-4 sm:p-6 rounded-2xl card-hover">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-60 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                                <span class="text-lg sm:text-xl">📱</span>
-                            </div>
-                            <div>
-                                <h3 class="text-base sm:text-lg font-bold text-blue-800">Phone</h3>
-                                <a href="tel:+393756058581" class="text-sm sm:text-base text-blue-700 hover:text-blue-900 transition-colors">
-                                    (+39) 375 605 8581
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gradient-to-br from-green-200 to-green-300 p-4 sm:p-6 rounded-2xl card-hover">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-60 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                                <span class="text-lg sm:text-xl">💼</span>
-                            </div>
-                            <div class="min-w-0">
-                                <h3 class="text-base sm:text-lg font-bold text-green-800">LinkedIn</h3>
-                                <a href="https://linkedin.com/in/riccardo-baratella-a8a828387" target="_blank" rel="noopener noreferrer" class="text-xs sm:text-sm text-green-700 hover:text-green-900 transition-colors break-all">
-                                    riccardo-baratella-a8a828387
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gradient-to-br from-pink-200 to-pink-300 p-4 sm:p-6 rounded-2xl card-hover">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-60 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                                <span class="text-lg sm:text-xl">📍</span>
-                            </div>
-                            <div>
-                                <h3 class="text-base sm:text-lg font-bold text-pink-800">Location</h3>
-                                <p class="text-sm sm:text-base text-pink-700">Mellaredo, Padova, Italy</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CV Download Modal -->
-    <div id="cvModal" class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-gradient-to-br from-white to-blue-50 p-4 sm:p-6 lg:p-8 rounded-2xl max-w-sm sm:max-w-md mx-auto transform transition-all shadow-xl w-full">
-            <h3 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center gradient-text">Download Documents</h3>
-            <p class="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6 text-center">Choose which document you'd like to download:</p>
-            
-            <div class="space-y-3 sm:space-y-4">
-                <button onclick="downloadDocument('cv')" class="w-full bg-gradient-to-r from-purple-400 to-blue-400 hover:from-purple-500 hover:to-blue-500 text-white px-4 sm:px-6 py-3 rounded-lg text-sm sm:text-base font-semibold transition-all transform hover:scale-105 flex items-center justify-center">
-                    <span class="mr-2">📄</span>
-                    Download CV (PDF)
-                </button>
-                
-                <button onclick="downloadDocument('resume')" class="w-full bg-gradient-to-r from-green-400 to-teal-400 hover:from-green-500 hover:to-teal-500 text-white px-4 sm:px-6 py-3 rounded-lg text-sm sm:text-base font-semibold transition-all transform hover:scale-105 flex items-center justify-center">
-                    <span class="mr-2">📋</span>
-                    Download Resume (PDF)
-                </button>
-            </div>
-            
-            <button onclick="closeCVModal()" class="w-full mt-4 sm:mt-6 border-2 border-gray-300 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 text-gray-700 px-4 sm:px-6 py-3 rounded-lg text-sm sm:text-base font-semibold transition-all">
-                Cancel
-            </button>
         </div>
     </div>
+</section>
 
-    <!-- Footer -->
-    <footer class="bg-gradient-to-r from-blue-100 to-purple-100 py-6 sm:py-8">
-        <div class="container mx-auto px-4 sm:px-6 text-center">
-            <p class="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4">
-                © 2024 Riccardo Baratella. All rights reserved.
-            </p>
-            <p class="text-xs sm:text-sm text-gray-600">
-                "Innovation starts with curiosity" - Ready to innovate together!
-            </p>
+<hr class="section-divider">
+
+<!-- ── ABOUT ── -->
+<section id="about">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-label">About me</p>
+            <h2 class="section-title">Building machines<br>that think.</h2>
         </div>
-    </footer>
+        <div class="about__grid reveal">
+            <div class="about__text">
+                <p>
+                    I am a <strong>17-year-old ICT student</strong> at ITI Francesco Severi in Castelfranco Veneto,
+                    currently in my fourth year specializing in Information and Communication Technologies.
+                    Alongside school I carry out an <strong>alternanza scuola-lavoro</strong> program in industrial
+                    automation, where I configure Seneca I/O modules, write PLC logic in SCL, and build
+                    HMI interfaces with EasyBuilder Pro.
+                </p>
+                <p>
+                    Outside the classroom I spend most of my time on robotics. I have been building and
+                    programming a <strong>6-axis PAROL6 robotic arm</strong>, implementing micro-ROS firmware
+                    on a Teensy 4.1 to bridge my embedded stepper-motor controllers into ROS&nbsp;2.
+                    The goal is full kinematic control over a real robot — from G-code parsing
+                    down to the AccelStepper library.
+                </p>
+                <p>
+                    I also run a home lab: a <strong>TrueNAS SCALE server</strong> with Docker containers,
+                    Pi-hole DNS filtering, Nginx reverse proxy, and VMware for virtualization.
+                    Network administration is where software and hardware meet — which is exactly
+                    the kind of problem I enjoy most.
+                </p>
+                <div class="about__meta">
+                    <div class="meta-row"><span class="meta-row__key">Born</span><span class="meta-row__val">December 24, 2008 — Padova, Italy</span></div>
+                    <div class="meta-row"><span class="meta-row__key">Location</span><span class="meta-row__val">Pianiga, Veneto, Italy</span></div>
+                    <div class="meta-row"><span class="meta-row__key">Availability</span><span class="meta-row__val">Internships &amp; collaborative projects</span></div>
+                </div>
+            </div>
 
-    <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
+            <div style="display:flex; flex-direction:column; gap:var(--space-4);">
+                <div class="about__card">
+                    <p class="about__card-title">Education</p>
+                    <div class="edu-item">
+                        <p class="edu-item__school">ITI Francesco Severi</p>
+                        <p class="edu-item__period">Sep 2022 — current</p>
+                        <p class="edu-item__desc">Information &amp; Communication Technologies diploma. Subjects include OOP (Java), networks, circuit design, PLC programming, and Italian literature.</p>
+                    </div>
+                </div>
+                <div class="about__card">
+                    <p class="about__card-title">Languages</p>
+                    <div class="lang-item"><span class="lang-item__name">Italian</span><span class="lang-item__level">Native</span></div>
+                    <div class="lang-item"><span class="lang-item__name">English</span><span class="lang-item__level">B2</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ── SKILLS ── -->
+<section id="skills">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-label">Technical skills</p>
+            <h2 class="section-title">What I work with</h2>
+            <p class="section-lead">A cross-disciplinary mix of industrial automation, embedded systems, robotics, and server infrastructure.</p>
+        </div>
+        <div class="skills__grid reveal">
+
+            <div class="skill-card">
+                <div class="skill-card__icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <p class="skill-card__title">Industrial Automation</p>
+                <div class="skill-tags">
+                    <span class="tag">TIA Portal</span><span class="tag">SCL / LAD</span><span class="tag">ModBus RTU</span>
+                    <span class="tag">Seneca I/O</span><span class="tag">EasyBuilder Pro</span><span class="tag">HMI / SCADA</span>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-card__icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                </div>
+                <p class="skill-card__title">Robotics &amp; ROS 2</p>
+                <div class="skill-tags">
+                    <span class="tag">ROS 2 Humble</span><span class="tag">micro-ROS</span><span class="tag">PAROL6 arm</span>
+                    <span class="tag">Kinematics</span><span class="tag">AccelStepper</span><span class="tag">TB6600 driver</span>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-card__icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8M12 3v4"/></svg>
+                </div>
+                <p class="skill-card__title">Embedded Systems</p>
+                <div class="skill-tags">
+                    <span class="tag">Teensy 4.1</span><span class="tag">Arduino / C++</span><span class="tag">ESP32</span>
+                    <span class="tag">PlatformIO</span><span class="tag">I2C / SPI / UART</span><span class="tag">Stepper motors</span>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-card__icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                </div>
+                <p class="skill-card__title">Networking &amp; Servers</p>
+                <div class="skill-tags">
+                    <span class="tag">TrueNAS SCALE</span><span class="tag">Docker</span><span class="tag">Nginx</span>
+                    <span class="tag">Pi-hole DNS</span><span class="tag">VMware</span><span class="tag">SSH / Linux</span>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-card__icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <p class="skill-card__title">Programming</p>
+                <div class="skill-tags">
+                    <span class="tag">Python</span><span class="tag">Java</span><span class="tag">C++ / Arduino</span>
+                    <span class="tag">SCL (PLC)</span><span class="tag">SQL</span><span class="tag">Lua</span>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-card__icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+                <p class="skill-card__title">Tools &amp; Environments</p>
+                <div class="skill-tags">
+                    <span class="tag">VS Code</span><span class="tag">Arduino IDE</span><span class="tag">Git / GitHub</span>
+                    <span class="tag">NI Multisim</span><span class="tag">Unity</span><span class="tag">ComfyUI</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ── PROJECTS ── -->
+<section id="projects">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-label">Projects</p>
+            <h2 class="section-title">Things I have built</h2>
+            <p class="section-lead">Personal and school projects spanning robotics, automation, game development, and home infrastructure.</p>
+        </div>
+        <div class="projects__grid reveal">
+
+            <article class="project-card">
+                <div class="project-card__header">
+                    <span class="project-card__icon" aria-hidden="true">&#129470;</span>
+                    <span class="project-card__badge project-card__badge--ongoing">Ongoing</span>
+                </div>
+                <h3 class="project-card__title">PAROL6 Robotic Arm</h3>
+                <p class="project-card__desc">
+                    Building and programming a 6-axis PAROL6 robot arm from scratch.
+                    Implementing micro-ROS on a Teensy 4.1 to interface stepper motor
+                    controllers with ROS 2, targeting full kinematic control
+                    with trajectory planning.
+                </p>
+                <div class="project-card__tags">
+                    <span class="tag">ROS 2</span><span class="tag">micro-ROS</span><span class="tag">Teensy 4.1</span>
+                    <span class="tag">C++ / Python</span><span class="tag">AccelStepper</span>
+                </div>
+            </article>
+
+            <article class="project-card">
+                <div class="project-card__header">
+                    <span class="project-card__icon" aria-hidden="true">&#128421;</span>
+                    <span class="project-card__badge project-card__badge--ongoing">Ongoing</span>
+                </div>
+                <h3 class="project-card__title">Home Lab Server</h3>
+                <p class="project-card__desc">
+                    Self-administered home server running TrueNAS SCALE with Docker
+                    containers, Nginx reverse proxy, Pi-hole DNS filtering, and VMware
+                    virtualization. Full SSH management, RAID storage, and local
+                    network services.
+                </p>
+                <div class="project-card__tags">
+                    <span class="tag">TrueNAS</span><span class="tag">Docker</span><span class="tag">Nginx</span>
+                    <span class="tag">Pi-hole</span><span class="tag">VMware</span>
+                </div>
+            </article>
+
+            <article class="project-card">
+                <div class="project-card__header">
+                    <span class="project-card__icon" aria-hidden="true">&#9881;</span>
+                    <span class="project-card__badge">Alternanza</span>
+                </div>
+                <h3 class="project-card__title">PLC / HMI Automation Setup</h3>
+                <p class="project-card__desc">
+                    Configured industrial Seneca I/O modules over ModBus RTU,
+                    wrote PLC logic in SCL with TIA Portal, and built operator
+                    interface panels using EasyBuilder Pro — during work-study
+                    placement in industrial automation.
+                </p>
+                <div class="project-card__tags">
+                    <span class="tag">TIA Portal</span><span class="tag">SCL</span><span class="tag">ModBus RTU</span>
+                    <span class="tag">Seneca</span><span class="tag">EasyBuilder Pro</span>
+                </div>
+            </article>
+
+            <article class="project-card">
+                <div class="project-card__header">
+                    <span class="project-card__icon" aria-hidden="true">&#127918;</span>
+                    <span class="project-card__badge">Dec 2024 &#8211; Mar 2025</span>
+                </div>
+                <h3 class="project-card__title">Ocean Cleanup Game</h3>
+                <p class="project-card__desc">
+                    Team school project: an environmental-awareness game where players
+                    pilot a spaceship to destroy ocean debris using laser weapons,
+                    earning points per piece eliminated. Built with Unity and C#.
+                </p>
+                <div class="project-card__tags">
+                    <span class="tag">Unity</span><span class="tag">C#</span><span class="tag">Game Design</span><span class="tag">Team project</span>
+                </div>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ── EXPERIENCE ── -->
+<section id="experience">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-label">Experience</p>
+            <h2 class="section-title">What I have done</h2>
+        </div>
+        <div class="timeline reveal">
+
+            <div class="timeline-item">
+                <div class="timeline-item__dot" aria-hidden="true"></div>
+                <div class="timeline-item__content">
+                    <p class="timeline-item__period">2024 &#8211; Present</p>
+                    <h3 class="timeline-item__title">Industrial Automation Technician</h3>
+                    <p class="timeline-item__org">Alternanza scuola-lavoro &#8212; Veneto, Italy</p>
+                    <p class="timeline-item__desc">
+                        Configuring Seneca I/O modules and ModBus RTU communication, writing
+                        PLC programs in SCL and Ladder with TIA Portal, building HMI panels
+                        with EasyBuilder Pro, and troubleshooting industrial network infrastructure.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-item__dot" aria-hidden="true"></div>
+                <div class="timeline-item__content">
+                    <p class="timeline-item__period">2022 &#8211; Present</p>
+                    <h3 class="timeline-item__title">ICT Student</h3>
+                    <p class="timeline-item__org">ITI Francesco Severi, Castelfranco Veneto</p>
+                    <p class="timeline-item__desc">
+                        Five-year technical diploma in Information and Communication Technologies.
+                        Coursework covers OOP in Java, web development, circuit design with NI Multisim,
+                        network data processing, telecommunications, and PLC programming.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-item__dot" aria-hidden="true"></div>
+                <div class="timeline-item__content">
+                    <p class="timeline-item__period">Summers 2023, 2024, 2025</p>
+                    <h3 class="timeline-item__title">Festival Volunteer</h3>
+                    <p class="timeline-item__org">FestOn Festival &#8212; Mellaredo, Padova</p>
+                    <p class="timeline-item__desc">
+                        Three consecutive summers volunteering as a waiter at the local
+                        FestOn festival. Reinforced teamwork, time management, and communication
+                        skills while working alongside people of diverse ages and backgrounds.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-label">Contact</p>
+            <h2 class="section-title">Let&#8217;s talk</h2>
+            <p class="section-lead">Open to internship opportunities, collaborative robotics/automation projects, and anything that involves taking hardware apart.</p>
+        </div>
+        <div class="contact__grid reveal">
+
+            <a href="mailto:riccardoo.baratella@gmail.com" class="contact-card">
+                <div class="contact-card__icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div>
+                    <p class="contact-card__label">Email</p>
+                    <p class="contact-card__value">riccardoo.baratella@gmail.com</p>
+                </div>
+            </a>
+
+            <a href="tel:+393756058581" class="contact-card">
+                <div class="contact-card__icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.08-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+                </div>
+                <div>
+                    <p class="contact-card__label">Phone</p>
+                    <p class="contact-card__value">(+39) 375 605 8581</p>
+                </div>
+            </a>
+
+            <a href="https://linkedin.com/in/riccardo-baratella-a8a828387" target="_blank" rel="noopener noreferrer" class="contact-card">
+                <div class="contact-card__icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </div>
+                <div>
+                    <p class="contact-card__label">LinkedIn</p>
+                    <p class="contact-card__value">riccardo-baratella-a8a828387</p>
+                </div>
+            </a>
+
+            <a href="https://github.com/barixb" target="_blank" rel="noopener noreferrer" class="contact-card">
+                <div class="contact-card__icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                </div>
+                <div>
+                    <p class="contact-card__label">GitHub</p>
+                    <p class="contact-card__value">github.com/barixb</p>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+    <div class="container footer__inner">
+        <p class="footer__copy">&#169; 2026 Riccardo Baratella. Pianiga, Veneto.</p>
+        <nav class="footer__links" aria-label="Footer navigation">
+            <a href="#home">Back to top</a>
+            <a href="mailto:riccardoo.baratella@gmail.com">Email me</a>
+        </nav>
+    </div>
+</footer>
+
+<script>
+(function(){
+    // Theme toggle
+    const toggle = document.querySelector('[data-theme-toggle]');
+    const root = document.documentElement;
+    let theme = root.getAttribute('data-theme') || 'dark';
+    const updateToggle = () => {
+        toggle.setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' mode');
+        toggle.innerHTML = theme === 'dark'
+            ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+            : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    };
+    updateToggle();
+    toggle.addEventListener('click', () => {
+        theme = theme === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', theme);
+        updateToggle();
+    });
+
+    // Mobile menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobile-nav');
+    hamburger.addEventListener('click', () => {
+        const open = mobileNav.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', String(open));
+    });
+    document.querySelectorAll('.mobile-link').forEach(l => {
+        l.addEventListener('click', () => { mobileNav.classList.remove('open'); hamburger.setAttribute('aria-expanded','false'); });
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => obs.observe(el));
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const t = document.querySelector(a.getAttribute('href'));
+            if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         });
-
-        // Intersection Observer for section animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.section-enter').forEach(section => {
-            observer.observe(section);
-        });
-
-        // Animate skill bars when they come into view
-        const skillObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const skillBars = entry.target.querySelectorAll('.skill-bar');
-                    skillBars.forEach(bar => {
-                        const width = bar.style.width;
-                        bar.style.width = '0%';
-                        setTimeout(() => {
-                            bar.style.width = width;
-                        }, 500);
-                    });
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('#skills').forEach(section => {
-            skillObserver.observe(section);
-        });
-
-        // Form submission handler
-        function handleSubmit(event) {
-            event.preventDefault();
-            
-            const formMessage = document.getElementById('form-message');
-            const form = event.target;
-            
-            // Simulate form submission
-            formMessage.className = 'mt-4 text-center text-green-400';
-            formMessage.textContent = 'Thank you for your message! I\'ll get back to you soon.';
-            formMessage.classList.remove('hidden');
-            
-            // Reset form
-            form.reset();
-            
-            // Hide message after 5 seconds
-            setTimeout(() => {
-                formMessage.classList.add('hidden');
-            }, 5000);
-        }
-
-        // Add dynamic background particles
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'fixed w-2 h-2 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full opacity-30 pointer-events-none';
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.top = '100vh';
-            particle.style.animation = `float ${3 + Math.random() * 4}s ease-in-out infinite`;
-            
-            document.body.appendChild(particle);
-            
-            // Remove particle after animation
-            setTimeout(() => {
-                particle.remove();
-            }, 7000);
-        }
-
-        // Create particles periodically
-        setInterval(createParticle, 2000);
-
-        // Add hover effects to cards
-        document.querySelectorAll('.card-hover').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-10px) scale(1.02)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-
-        // CV Download functionality
-        function downloadCV() {
-            document.getElementById('cvModal').classList.remove('hidden');
-        }
-
-        function closeCVModal() {
-            document.getElementById('cvModal').classList.add('hidden');
-        }
-
-        function downloadDocument(type) {
-            // Create a sample PDF content (in a real scenario, you'd have actual PDF files)
-            const content = generatePDFContent(type);
-            
-            // Create blob and download
-            const blob = new Blob([content], { type: 'application/pdf' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = type === 'cv' ? 'Riccardo_Baratella_CV.pdf' : 'Riccardo_Baratella_Resume.pdf';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            
-            // Close modal
-            closeCVModal();
-            
-            // Show success message
-            showDownloadMessage(type);
-        }
-
-        function generatePDFContent(type) {
-            // This is a placeholder - in a real scenario, you'd have actual PDF files
-            // For demo purposes, we're creating a simple text file
-            const cvContent = `RICCARDO BARATELLA - CURRICULUM VITAE
-
-Personal Information:
-- Born: December 24, 2008 in Padova, Italy
-- Location: Mellaredo, Italy
-- Email: riccardoo.baratella@gmail.com
-- Phone: (+39) 375 605 8581
-- LinkedIn: riccardo-baratella-a8a828387
-
-Education:
-ITI Francesco Severi (Sep 2022 - Current)
-Information and Communication Technologies
-- Object-Oriented Programming (Java)
-- Web Development (HTML, CSS, JS)
-- Network Data Processing
-- Circuit Design (NI Multisim)
-
-Technical Skills:
-Programming: Java (85%), Python (75%), C# (65%)
-Web Development: HTML (90%), CSS (85%), JavaScript (80%)
-Electronics: Arduino (90%), ESP32 (75%), Circuit Design (80%)
-
-Projects:
-- Ocean Cleanup Game (Unity, C#) - Dec 2024 - Mar 2025
-- Electronics Hobby Projects (Arduino, ESP32) - Ongoing
-
-Volunteer Experience:
-FestOn Festival Volunteer (Summer 2023, 2024, 2025)
-- Teamwork and collaboration
-- Time management
-- Respect for diverse age groups
-
-Languages:
-- Italian (Native)
-- English (B2)`;
-
-            const resumeContent = `RICCARDO BARATELLA - RESUME
-
-CONTACT INFORMATION
-Email: riccardoo.baratella@gmail.com
-Phone: (+39) 375 605 8581
-Location: Mellaredo, Padova, Italy
-LinkedIn: riccardo-baratella-a8a828387
-
-OBJECTIVE
-Passionate ICT student seeking opportunities in technology field. 
-Excellent problem-solving and programming skills with experience 
-in both independent work and team collaboration.
-
-EDUCATION
-ITI Francesco Severi | Sep 2022 - Current
-High School Diploma in Information and Communication Technologies
-
-TECHNICAL SKILLS
-• Programming Languages: Java, Python, C#
-• Web Technologies: HTML, CSS, JavaScript
-• Electronics: Arduino, ESP32, Circuit Design
-• Tools: Unity, NI Multisim
-
-KEY PROJECTS
-Ocean Cleanup Game | Dec 2024 - Mar 2025
-• Developed environmental awareness game using Unity and C#
-• Collaborated with team members on game design and implementation
-
-Electronics Projects | Ongoing
-• Personal projects exploring component integration
-• Hands-on learning with Arduino and ESP32 platforms
-
-EXPERIENCE
-Festival Volunteer | FestOn Festival | Summer 2023-2025
-• Demonstrated teamwork and time management skills
-• Worked effectively with diverse age groups
-• Maintained punctuality and professional standards
-
-LANGUAGES
-Italian (Native), English (B2)`;
-
-            return type === 'cv' ? cvContent : resumeContent;
-        }
-
-        function showDownloadMessage(type) {
-            const message = document.createElement('div');
-            message.className = 'fixed top-4 right-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all';
-            message.textContent = `${type === 'cv' ? 'CV' : 'Resume'} downloaded successfully!`;
-            
-            document.body.appendChild(message);
-            
-            setTimeout(() => {
-                message.style.transform = 'translateX(100%)';
-                setTimeout(() => {
-                    document.body.removeChild(message);
-                }, 300);
-            }, 3000);
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('cvModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeCVModal();
-            }
-        });
-
-        // Mobile menu functionality
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuBtn.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('#mobile-menu a').forEach(link => {
-            link.addEventListener('click', function() {
-                mobileMenu.classList.add('hidden');
-            });
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-                mobileMenu.classList.add('hidden');
-            }
-        });
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992a6dea133e0e9d',t:'MTc2MTE1MTE1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    });
+})();
+</script>
+</body>
 </html>
